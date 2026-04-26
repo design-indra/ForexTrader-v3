@@ -10,14 +10,10 @@ export const metadata: Metadata = {
   description: "Forex Trading Dashboard",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className="dark">
+      <body className={`${inter.className} bg-gray-950 text-gray-100 min-h-screen`}>
         <Providers>{children}</Providers>
       </body>
     </html>
