@@ -1,4 +1,4 @@
-import type { NextAuthConfig } from "next-auth";
+import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
@@ -8,7 +8,7 @@ const LoginSchema = z.object({
   password: z.string().min(8),
 });
 
-export const authOptions: NextAuthConfig = {
+export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: { strategy: "jwt" },
   providers: [
@@ -33,8 +33,8 @@ export const authOptions: NextAuthConfig = {
     }),
   ],
   callbacks: {
-    async jwt({ token, session }) {
-      if (session?.user) token.user = session.user;
+    async jwt({ token, user }) {
+      if (user) token.user = user;
       return token;
     },
     async session({ session, token }) {
@@ -43,15 +43,4 @@ export const authOptions: NextAuthConfig = {
     },
   },
   pages: { signIn: "/login" },
-  cookies: {
-    sessionToken: {
-      name: "next-auth.session-token",
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-      },
-    },
-  },
 };
