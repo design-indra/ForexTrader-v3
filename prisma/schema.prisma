@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  trades    Trade[]
+  backtests BacktestResult[]
+  settings  UserSettings?
+}
+
+model Trade {
+  id         Int      @id @default(autoincrement())
+  userId     String
+  symbol     String
+  action     String
+  entryPrice Float
+  exitPrice  Float?
+  pnl        Float
+  reason     String?
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+}
+
+model BacktestResult {
+  id          Int      @id @default(autoincrement())
+  userId      String
+  pair        String
+  level       Int
+  startDate   DateTime
+  endDate     DateTime
+  totalReturn Float
+  winRate     Float
+  maxDrawdown Float
+  tradesCount Int
+  equityCurve Json
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model UserSettings {
+  id               Int      @id @default(autoincrement())
+  userId           String   @unique
+  strategyParams   Json?
+  telegramBotToken String?
+  telegramChatId   String?
+  updatedAt        DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
