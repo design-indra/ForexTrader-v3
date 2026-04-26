@@ -1,9 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["next-auth"],
-  experimental: {
-    serverComponentsExternalPackages: ["bcryptjs"],
-  },
+  output: "standalone",
 };
 
 module.exports = nextConfig;
