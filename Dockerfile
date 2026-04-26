@@ -10,13 +10,13 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npx prisma generate
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXTAUTH_SECRET=buildsecret
 ENV NEXTAUTH_URL=http://localhost:3000
 ENV AUTH_EMAIL=admin@example.com
 ENV AUTH_PASSWORD_HASH=placeholder
 ENV DATABASE_URL=postgresql://user:password@localhost:5432/db
+RUN npx prisma generate --no-engine
 RUN npm run build
 
 FROM base AS runner
