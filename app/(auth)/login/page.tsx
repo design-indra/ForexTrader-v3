@@ -1,5 +1,4 @@
 "use client";
-import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -13,13 +12,21 @@ export default function LoginPage() {
   async function handleLogin() {
     setLoading(true);
     setError("");
-    const res = await signIn("credentials", { email, password, redirect: false });
-    setLoading(false);
-    if (res?.error) {
-      setError("Email atau password salah.");
-    } else {
-      router.push("/");
+    try {
+      const res = await fetch("/api/auth/callback/credentials", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, redirect: false, csrfToken: "" }),
+      });
+      if (res.ok) {
+        router.push("/");
+      } else {
+        setError("Email atau password salah.");
+      }
+    } catch {
+      setError("Terjadi kesalahan. Coba lagi.");
     }
+    setLoading(false);
   }
 
   return (
@@ -27,7 +34,7 @@ export default function LoginPage() {
       <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-md">
         <h1 className="text-2xl font-bold mb-2 text-center">ForexTrader v3</h1>
         <p className="text-sm text-gray-500 text-center mb-6">Sign in to your account</p>
-        {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
+        {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
         <div className="space-y-4">
           <input type="email" placeholder="Email" value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -42,7 +49,6 @@ export default function LoginPage() {
         </div>
         <div className="mt-6 p-3 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg text-xs text-yellow-700 dark:text-yellow-300">
           Warning: This app is for educational/simulation purposes only. Forex trading carries high risk of loss.
-          We are not financial advisors. BAPPEBTI regulations apply in Indonesia.
         </div>
       </div>
     </div>
