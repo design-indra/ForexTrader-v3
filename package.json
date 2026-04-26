@@ -29,8 +29,8 @@
     "node-telegram-bot-api": "^0.64.0",
     "pino": "^9.2.0",
     "pino-pretty": "^11.2.0",
-    "react": "18",
-    "react-dom": "18",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-hook-form": "^7.51.0",
     "recharts": "^2.12.9",
     "sonner": "^1.4.41",
@@ -55,5 +55,9 @@
     "tailwindcss": "^3.4.3",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.4.2"
+  },
+  "overrides": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   }
 }
